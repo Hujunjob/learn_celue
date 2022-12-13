@@ -15,8 +15,6 @@ from zoneinfo import ZoneInfo
 from config import DATA_DIR,BACKTEST_DATA_DIR
 import os
 
-font = {'family':'Arial Unicode MS'}
-matplotlib.rc('font',**font)
 
 btc_df:DataFrame = pd.read_csv(os.path.join(DATA_DIR,"BTC-USDT.csv"))
 eth_df:DataFrame = pd.read_csv(os.path.join(DATA_DIR,"ETH-USDT.csv"))
@@ -94,6 +92,8 @@ back_test_df.to_csv(os.path.join(BACKTEST_DATA_DIR,back_test_file))
 eth_price_df:DataFrame = pd.read_csv(os.path.join(DATA_DIR,"ETH-USDT.csv"))
 
 
+font = {'family':'Arial Unicode MS'}
+matplotlib.rc('font',**font)
 plt.title("持仓净值-ETH/BTC价格轮动策略")
 plt.xlabel('时间')
 plt.ylabel('净值')
