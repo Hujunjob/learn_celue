@@ -44,7 +44,9 @@ def save_change_data(file:str):
     
     celue.to_csv(os.path.join(BACKTEST_DATA_DIR,file))
 
+#只需要保存一次
 # save_change_data(change_data_file)
+
 
 #开始分析涨跌
 change_data_df:DataFrame = pd.read_csv(os.path.join(BACKTEST_DATA_DIR,change_data_file))
@@ -62,7 +64,6 @@ for index in change_data_df.index:
         back_test_df = pd.concat([back_test_df,
         DataFrame({'time':[time],'BTC当日涨幅':btc_change,'ETH当日涨幅':eth_change,'买入':'无','开盘收益':0, '持仓U':1000,'持仓净值':1})],ignore_index=True)
         continue
-    # print(back_test_df)
     #看昨天的涨幅
     btc_change_before = change_data_df['btc_change'][index-1]
     eth_change_before = change_data_df['eth_change'][index-1]
@@ -71,7 +72,6 @@ for index in change_data_df.index:
         buy_crypto = 'BTC'
     else:
         buy_crypto = 'ETH'
-    # print(f"index {index} 买入 {back_test_df['买入'][index-1]}")
     lastbuy = back_test_df['买入'][index-1]
     if lastbuy=='无':
         back_test_df = pd.concat([back_test_df,
@@ -95,10 +95,12 @@ back_test_df.to_csv(os.path.join(BACKTEST_DATA_DIR,back_test_file))
 
 # plt.rcParams['font.sans-serif'] = ['Arial Black'] # 用来正常显示中文标签
 # plt.rcParams['axes.unicode_minus'] = False # 用来正常显示负号
-plt.title("持仓净值")
+plt.title("持仓净值-ETH/BTC价格轮动策略")
 plt.xlabel('时间')
 plt.ylabel('净值')
-# plt.grid(True)
-plt.grid(axis='y')
-plt.plot(back_test_df["time"],back_test_df["持仓净值"])
+plt.grid(True)
+plt.grid(color='red',ls='--')
+x = back_test_df["time"]
+plt.plot(x,back_test_df["持仓净值"])
+plt.xticks(x[::90], rotation=45)
 plt.show()

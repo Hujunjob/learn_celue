@@ -39,11 +39,13 @@ def fetch_price(
         readable_time: datetime = datetime.fromtimestamp(  # type: ignore
                                 data[0] / 1000, tz=ZoneInfo("Asia/Shanghai")
                                 )
+        # readable_time = readable_time.strftime('%Y-%m-%d %H:%M:%S')
+        readable_time = readable_time.strftime('%Y-%m-%d')
         start_price = data[1]
         end_price = data[4]
         change = (end_price - start_price)/start_price
         change = round(change*100,2)
-        df = pd.concat([df,DataFrame({"time":readable_time,"start":start_price,'end':end_price,'change/%':change})],ignore_index=True)
+        df = pd.concat([df,DataFrame({"time":[readable_time],"start":start_price,'end':end_price,'change/%':change})],ignore_index=True)
         #下面的方法将被废弃
         # df = df.append(
         #         DataFrame({"Time":[readable_time],"Price":price}),ignore_index=True
