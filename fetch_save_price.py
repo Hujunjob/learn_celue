@@ -4,7 +4,7 @@ from pandas import DataFrame, read_csv
 import pandas as pd
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
-from config import DATA_DIR
+from config import DATA_DIR,FETCH_TOKENS
 import os
 
 
@@ -53,22 +53,52 @@ def fetch_price(
     return df
 
 
-# 时间戳
+
+def fetch_all_price(
+    symbol:str,    
+    timeframe:str,
+    start:int
+) ->DataFrame:
+    # 时间戳
+
+    #由于从交易所单次获取数据是有限制的，手动每次获取1000条数据，然后拼接
+    frame01:DataFrame = fetch_price(symbol,timeframe,start,1000)
+    frame02:DataFrame = fetch_price(symbol,timeframe,start+1000*86400*1000,1000)
+    frame:DataFrame = pd.concat([frame01,frame02],ignore_index=True)
+    return frame
+
+
+def fetch_and_save(
+    symbol:str,    
+    timeframe:str,
+    start:int
+):
+    frame:DataFrame = fetch_all_price(symbol,timeframe,start)
+    symbol = symbol.replace("/","-")
+    file = os.path.join(DATA_DIR,f"{symbol}.csv")
+    print(f"save file {file}")
+    frame.to_csv(file)
+
+
 time2019 = 1546272000000
 time2022 = 1640966400000
-
-
 #由于从交易所单次获取数据是有限制的，手动每次获取1000条数据，然后拼接
-btcFrame01:DataFrame = fetch_price("BTC/USDT",'1d',time2019,1000)
-btcFrame02:DataFrame = fetch_price("BTC/USDT",'1d',time2019+1000*86400*1000,1000)
-btcFrame:DataFrame = pd.concat([btcFrame01,btcFrame02],ignore_index=True)
+# btcFrame01:DataFrame = fetch_price("BTC/USDT",'1d',time2019,1000)
+# btcFrame02:DataFrame = fetch_price("BTC/USDT",'1d',time2019+1000*86400*1000,1000)
+# btcFrame:DataFrame = fetch_all_price("BTC/USDT",'1d')
+# ethFrame:DataFrame = fetch_all_price("ETH/USDT",'1d')
+
+# ethFrame01:DataFrame = fetch_price("ETH/USDT",'1d',time2019,1000)
+# ethFrame02:DataFrame = fetch_price("ETH/USDT",'1d',time2019+1000*86400*1000,1000)
+# ethFrame:DataFrame = pd.concat([ethFrame01,ethFrame02],ignore_index=True)
 
 
-ethFrame01:DataFrame = fetch_price("ETH/USDT",'1d',time2019,1000)
-ethFrame02:DataFrame = fetch_price("ETH/USDT",'1d',time2019+1000*86400*1000,1000)
-ethFrame:DataFrame = pd.concat([ethFrame01,ethFrame02],ignore_index=True)
+# btcFrame.to_csv(os.path.join(DATA_DIR,"BTC-USDT.csv"))
+# ethFrame.to_csv(os.path.join(DATA_DIR,"ETH-USDT.csv"))
 
+# fetch_and_save("BTC/USDT",'1d',time2019)
+# fetch_and_save("ETH/USDT",'1d',time2019)
+# fetch_and_save("BNB/USDT",'1d',time2019)
 
-btcFrame.to_csv(os.path.join(DATA_DIR,"BTC-USDT.csv"))
-ethFrame.to_csv(os.path.join(DATA_DIR,"ETH-USDT.csv"))
-
+for token in FETCH_TOKENS:
+    fetch_and_save(token,'1d',time2019)
