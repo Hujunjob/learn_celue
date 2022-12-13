@@ -39,25 +39,24 @@ def fetch_price(
         readable_time: datetime = datetime.fromtimestamp(  # type: ignore
                                 data[0] / 1000, tz=ZoneInfo("Asia/Shanghai")
                                 )
-        price = data[1]
-        df = pd.concat([df,DataFrame({"Time":[readable_time],"Price":price})],ignore_index=True)
+        start_price = data[1]
+        end_price = data[4]
+        change = (end_price - start_price)/start_price
+        change = round(change*100,2)
+        df = pd.concat([df,DataFrame({"time":readable_time,"start":start_price,'end':end_price,'change/%':change})],ignore_index=True)
+        #下面的方法将被废弃
         # df = df.append(
         #         DataFrame({"Time":[readable_time],"Price":price}),ignore_index=True
             # )
     return df
 
 
-# 获取最新价格数据
-# ticker = binance.fetch_ticker(symbol="BTC/USDT")
-# print("ticker:", ticker)
-
-
 # 时间戳
 time2019 = 1546272000000
 time2022 = 1640966400000
-time30daysbefore = 1668182400000
 
 
+#由于从交易所单次获取数据是有限制的，手动每次获取1000条数据，然后拼接
 btcFrame01:DataFrame = fetch_price("BTC/USDT",'1d',time2019,1000)
 btcFrame02:DataFrame = fetch_price("BTC/USDT",'1d',time2019+1000*86400*1000,1000)
 btcFrame:DataFrame = pd.concat([btcFrame01,btcFrame02],ignore_index=True)
@@ -70,8 +69,7 @@ ethFrame:DataFrame = pd.concat([ethFrame01,ethFrame02],ignore_index=True)
 
 btcFrame.to_csv(os.path.join(DATA_DIR,"BTC-USDT.csv"))
 ethFrame.to_csv(os.path.join(DATA_DIR,"ETH-USDT.csv"))
-# print(btcFrame)
-# print(ethFrame)
+
 
 # plt.xlabel('time')
 # plt.ylabel('price')
