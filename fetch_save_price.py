@@ -72,9 +72,3 @@ ethFrame:DataFrame = pd.concat([ethFrame01,ethFrame02],ignore_index=True)
 btcFrame.to_csv(os.path.join(DATA_DIR,"BTC-USDT.csv"))
 ethFrame.to_csv(os.path.join(DATA_DIR,"ETH-USDT.csv"))
 
-
-# plt.xlabel('time')
-# plt.ylabel('price')
-# plt.plot(btcFrame["Time"],btcFrame["Price"])
-# plt.show()
-
