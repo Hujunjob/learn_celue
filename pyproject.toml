@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ta-learn"
+version = "0.1.0"
+description = ""
+authors = ["luckyhu"]
+readme = "README.md"
+packages = [{include = "leanr_celue"}]
+
+[tool.poetry.dependencies]
+python = "3.11"
+ccxt = "^2.2.92"
+matplotlib = "^3.6.2"
+pandas = "^1.5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
