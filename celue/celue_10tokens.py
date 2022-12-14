@@ -1,8 +1,7 @@
 #######################################################################################################
 
-#最简单的开始策略：轮替策略
-#当比特币涨幅超过以太坊，则购买比特币
-#否则购买以太坊
+#策略：10选3轮替策略
+#从10个币里，选取当天涨幅最大的3个币
 
 #######################################################################################################
 
@@ -43,7 +42,6 @@ def cal_all_token_change():
 
 #只需要保存一次
 # cal_all_token_change()
-
 
 
 #开始分析涨跌
@@ -109,7 +107,7 @@ back_test_df.to_csv(os.path.join(BACKTEST_DATA_DIR,back_test_file))
 
 # plt.rcParams['font.sans-serif'] = ['Arial Black'] # 用来正常显示中文标签
 # plt.rcParams['axes.unicode_minus'] = False # 用来正常显示负号
-# 
+
 eth_price_df:DataFrame = pd.read_csv(os.path.join(DATA_DIR,"ETH-USDT.csv"))
 doge_price_df:DataFrame = pd.read_csv(os.path.join(DATA_DIR,"DOGE-USDT.csv"))
 
